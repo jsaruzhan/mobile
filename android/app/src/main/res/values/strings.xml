@@ -7,4 +7,7 @@
     <string name="widget_daily_puzzle_title">Daily Puzzle\n</string>
     <string name="widget_daily_puzzle_description">Shows daily puzzle</string>
   <string name="widget_no_dailyPuzzle">No New Puzzles\n</string>
+    <string name="widget_community_description">Shows news from the Community</string>
+  <string name="widget_no_community_news">No community news available\n</string>
+  <string name="widget_community_title">Lichess Community\n</string>
 </resources>
