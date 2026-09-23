@@ -87,10 +87,6 @@ class DailyPuzzleWidgetProvider : AppWidgetProvider() {
     appWidgetIds.forEach { updateWidget(context, appWidgetManager, it) }
   }
 
-  // Builds the widget's click target. When a daily puzzle id is known, this opens the native
-  // "Daily Puzzle" screen directly via the `org.lichess.mobile://training/daily/{puzzleId}`
-  // deeplink handled by AppLinksService.handleDailyPuzzleLink (mirrors Deeplinks.swift on iOS).
-  // Otherwise it just falls back to launching the app.
   private fun buildClickPendingIntent(
     context: Context,
     appWidgetId: Int,
