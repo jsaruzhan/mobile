@@ -1,5 +1,8 @@
+import groovy.json.JsonSlurper
 import java.util.Properties
 import java.io.FileInputStream
+import java.io.File
+import java.net.URI
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -15,6 +18,37 @@ val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
+val chessgroundAssetsDir = layout.buildDirectory.dir("generated/chessgroundAssets/res/drawable-nodpi")
+val copyChessgroundPieceAssets by tasks.registering {
+  val packageConfigFile = file("../../.dart_tool/package_config.json")
+  val outputDir = chessgroundAssetsDir.get().asFile
+
+  inputs.file(packageConfigFile)
+  outputs.dir(outputDir)
+
+  doLast {
+    check(packageConfigFile.exists()) {
+      "Missing $packageConfigFile — run `flutter pub get` from the project root first."
+    }
+    val config = JsonSlurper().parse(packageConfigFile) as Map<*, *>
+    @Suppress("UNCHECKED_CAST")
+    val packages = config["packages"] as List<Map<*, *>>
+    val chessground = packages.first { it["name"] == "chessground" }
+    val packageDir = File(URI(chessground["rootUri"] as String))
+    val sourceDir = File(packageDir, "assets/piece_sets/cburnett")
+
+    check(sourceDir.exists()) { "Could not find cburnett piece assets at $sourceDir" }
+
+    outputDir.deleteRecursively()
+    outputDir.mkdirs()
+
+    sourceDir.listFiles { f -> f.isFile && f.extension == "webp" }
+      ?.forEach { source ->
+        source.copyTo(File(outputDir, "piece_cburnett_${source.nameWithoutExtension.lowercase()}.webp"))
+      }
+  }
 }
 
 android {
@@ -77,7 +111,14 @@ android {
         includeInApk = false
         includeInBundle = true
     }
+
+  sourceSets {
+    getByName("main") {
+      res.srcDir(chessgroundAssetsDir.get().asFile)
+    }
+  }
 }
+
 
 kotlin {
     compilerOptions {
@@ -93,4 +134,8 @@ dependencies {
     // Dependency required by flutter_local_notifications package
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     implementation("androidx.core:core-splashscreen:1.0.1")
+}
+
+tasks.matching { it.name.matches(Regex("merge.*Resources")) }.configureEach {
+  dependsOn(copyChessgroundPieceAssets)
 }
