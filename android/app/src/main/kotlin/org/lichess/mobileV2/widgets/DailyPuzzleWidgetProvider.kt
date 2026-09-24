@@ -87,10 +87,6 @@ class DailyPuzzleWidgetProvider : AppWidgetProvider() {
     appWidgetIds.forEach { updateWidget(context, appWidgetManager, it) }
   }
 
-  // Builds the widget's click target. When a daily puzzle id is known, this opens the native
-  // "Daily Puzzle" screen directly via the `org.lichess.mobile://training/daily/{puzzleId}`
-  // deeplink handled by AppLinksService.handleDailyPuzzleLink (mirrors Deeplinks.swift on iOS).
-  // Otherwise it just falls back to launching the app.
   private fun buildClickPendingIntent(
     context: Context,
     appWidgetId: Int,
@@ -228,8 +224,8 @@ class DailyPuzzleWidgetProvider : AppWidgetProvider() {
         val rankIndex = if (flipped) 7 - row else row
         val fileIndex = if (flipped) 7 - col else col
         val isLight = (rankIndex + fileIndex) % 2 == 0
-        val left = fileIndex *sqrSize
-        val top = rankIndex * sqrSize
+        val left = col *sqrSize
+        val top = row * sqrSize
         val sqrRect = Rect(left, top, left + sqrSize, top + sqrSize)
         val piece = boardData.getOrNull(rankIndex)?.getOrNull(fileIndex)
         val name = sqrName(rankIndex, fileIndex)

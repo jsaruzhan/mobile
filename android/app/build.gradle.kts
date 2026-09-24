@@ -20,34 +20,50 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
-val chessgroundAssetsDir = layout.buildDirectory.dir("generated/chessgroundAssets/res/drawable-nodpi")
-val copyChessgroundPieceAssets by tasks.registering {
-  val packageConfigFile = file("../../.dart_tool/package_config.json")
-  val outputDir = chessgroundAssetsDir.get().asFile
+abstract class CopyChessgroundPieceAssetsTask : DefaultTask() {
+  @get:InputFile
+  abstract val packageConfigFile: RegularFileProperty
 
-  inputs.file(packageConfigFile)
-  outputs.dir(outputDir)
+  @get:OutputDirectory
+  abstract val outputDirectory: DirectoryProperty
 
-  doLast {
-    check(packageConfigFile.exists()) {
-      "Missing $packageConfigFile — run `flutter pub get` from the project root first."
+  @TaskAction
+  fun copy() {
+    val configFile = packageConfigFile.get().asFile
+    check(configFile.exists()) {
+      "Missing $configFile — run `flutter pub get` from the project root first."
     }
-    val config = JsonSlurper().parse(packageConfigFile) as Map<*, *>
+
+    val config = JsonSlurper().parse(configFile) as Map<*, *>
     @Suppress("UNCHECKED_CAST")
     val packages = config["packages"] as List<Map<*, *>>
     val chessground = packages.first { it["name"] == "chessground" }
     val packageDir = File(URI(chessground["rootUri"] as String))
     val sourceDir = File(packageDir, "assets/piece_sets/cburnett")
-
     check(sourceDir.exists()) { "Could not find cburnett piece assets at $sourceDir" }
 
-    outputDir.deleteRecursively()
-    outputDir.mkdirs()
+    val outDir = File(outputDirectory.get().asFile, "drawable-nodpi")
+    outDir.deleteRecursively()
+    outDir.mkdirs()
 
     sourceDir.listFiles { f -> f.isFile && f.extension == "webp" }
       ?.forEach { source ->
-        source.copyTo(File(outputDir, "piece_cburnett_${source.nameWithoutExtension.lowercase()}.webp"))
+        source.copyTo(File(outDir, "piece_cburnett_${source.nameWithoutExtension.lowercase()}.webp"))
       }
+  }
+}
+
+val copyChessgroundPieceAssets = tasks.register<CopyChessgroundPieceAssetsTask>("copyChessgroundPieceAssets") {
+  packageConfigFile.set(file("../../.dart_tool/package_config.json"))
+  outputDirectory.set(layout.buildDirectory.dir("generated/chessgroundAssets/res"))
+}
+
+androidComponents {
+  onVariants { variant ->
+    variant.sources.res?.addGeneratedSourceDirectory(
+      copyChessgroundPieceAssets,
+      CopyChessgroundPieceAssetsTask::outputDirectory
+    )
   }
 }
 
@@ -112,11 +128,6 @@ android {
         includeInBundle = true
     }
 
-  sourceSets {
-    getByName("main") {
-      res.srcDir(chessgroundAssetsDir.get().asFile)
-    }
-  }
 }
 
 
@@ -134,8 +145,4 @@ dependencies {
     // Dependency required by flutter_local_notifications package
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     implementation("androidx.core:core-splashscreen:1.0.1")
-}
-
-tasks.matching { it.name.matches(Regex("merge.*Resources")) }.configureEach {
-  dependsOn(copyChessgroundPieceAssets)
 }

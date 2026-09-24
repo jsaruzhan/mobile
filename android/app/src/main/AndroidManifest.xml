@@ -175,7 +175,7 @@
         <receiver android:exported="false"
           android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver"/>
         <receiver android:name=".widgets.DailyPuzzleWidgetProvider"
-            android:label="Lichess Daily Puzzle"
+            android:label="@string/widget_daily_puzzle_title"
             android:exported="true"
             android:permission="android.permission.BIND_APPWIDGET">
             <intent-filter>
