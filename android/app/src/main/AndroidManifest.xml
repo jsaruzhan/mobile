@@ -183,7 +183,7 @@
             </intent-filter>
             <meta-data
               android:name="android.appwidget.provider"
-              android:resource="@xml/widget_daily_puzzle"/>
+              android:resource="@xml/widget_daily_puzzle_info"/>
         </receiver>
 
         <!-- Don't delete the meta-data below.

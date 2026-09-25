@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -16,7 +15,6 @@ import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.RectF
 import android.net.Uri
-import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
@@ -24,10 +22,6 @@ import android.widget.RemoteViews
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.concurrent.Callable
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 import kotlin.concurrent.thread
 import org.lichess.mobileV2.R
 import org.lichess.mobileV2.MainActivity
@@ -142,11 +136,15 @@ class DailyPuzzleWidgetProvider : AppWidgetProvider() {
 
         val boardBitmap = getBoardBitmap(context, minWidth, puzzle.fen, puzzle.lastMove)
         val roundBoard = getRoundedCornerBitmap(boardBitmap, cornerRadiusPx)
+        boardBitmap.recycle()
         remoteViews.setImageViewBitmap(R.id.puzzle_board_image, roundBoard)
 
       }
     } catch (e: Exception) {
       Log.e("DailyPuzzleWidget", "Error updating widget $appWidgetId", e)
+      remoteViews.setTextViewText(R.id.no_puzzle, context.getString(R.string.widget_daily_puzzle_error))
+      remoteViews.setViewVisibility(R.id.no_puzzle, View.VISIBLE)
+      remoteViews.setViewVisibility(R.id.puzzle_board_image, View.GONE)
     }
 
     val clickPendingIntent = buildClickPendingIntent(context, appWidgetId, puzzleId)
@@ -216,6 +214,8 @@ class DailyPuzzleWidgetProvider : AppWidgetProvider() {
 
     val highlighted = highlightedSquare(lastMove)
     val boardData = parseFen(fen)
+    val piecesInFen = boardData.flatten().filterNotNull().toSet()
+    val pieceBitmap = piecesInFen.associateWith { getPieceBitmap(context, it) }
     val isWhiteToMove = fen.split(" ").getOrNull(1) == "w"
     val flipped = !isWhiteToMove
 
@@ -236,16 +236,16 @@ class DailyPuzzleWidgetProvider : AppWidgetProvider() {
         }
 
         if(piece != null){
-          val pieceBitmap = getPieceBitmap(context, piece)
+          val pieceBitmap = pieceBitmap[piece]
           if(pieceBitmap != null){
             val inset = (sqrSize * 0.05f).toInt()
             val pieceRect = Rect(left + inset, top + inset, left + sqrSize -inset, top + sqrSize - inset)
             canvas.drawBitmap(pieceBitmap, null, pieceRect, null)
-            pieceBitmap.recycle()
           }
         }
       }
     }
+    pieceBitmap.values.forEach { it?.recycle() }
     return bitmap
   }
 
