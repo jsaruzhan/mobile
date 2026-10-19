@@ -52,34 +52,12 @@ class const _AnalysisBottomBar({required final StudyOptions options}) extends Co
         _StudyMenuButton(options: options),
         _ChapterButton(options: options),
         if (state.isComputerAnalysisAllowed)
-          Builder(
-            builder: (context) {
-              Future<void>? toggleFuture;
-              return FutureBuilder(
-                future: toggleFuture,
-                builder: (context, snapshot) {
-                  return EngineButton(
-                    filters: (context: state.evaluationContext, path: state.currentPath),
-                    savedEval: state.currentNode.eval,
-                    onTap: snapshot.connectionState != ConnectionState.waiting
-                        ? () async {
-                            toggleFuture = ref
-                                .read(studyControllerProvider(options).notifier)
-                                .toggleEngine();
-                            try {
-                              await toggleFuture;
-                            } finally {
-                              toggleFuture = null;
-                            }
-                          }
-                        : null,
-                    goDeeper: () => ref
-                        .read(studyControllerProvider(options).notifier)
-                        .requestEval(goDeeper: true),
-                  );
-                },
-              );
-            },
+          EngineToggleButton(
+            filters: (context: state.evaluationContext, path: state.currentPath),
+            savedEval: state.currentNode.eval,
+            onToggle: () => ref.read(studyControllerProvider(options).notifier).toggleEngine(),
+            onGoDeeper: () =>
+                ref.read(studyControllerProvider(options).notifier).requestEval(goDeeper: true),
           ),
         _NextChapterButton(
           options: options,
@@ -251,18 +229,12 @@ Future<void> _showStudySheet(
   BuildContext context, {
   required Widget Function(BuildContext, ScrollController) builder,
 }) {
-  return showModalBottomSheet<void>(
+  return showAdaptiveDraggableBottomSheet<void>(
     context: context,
-    showDragHandle: true,
-    isScrollControlled: true,
-    isDismissible: true,
     constraints: BoxConstraints(maxHeight: MediaQuery.heightOf(context) * 0.9),
-    builder: (_) => DraggableScrollableSheet(
-      initialChildSize: 0.6,
-      snap: true,
-      expand: false,
-      builder: builder,
-    ),
+    initialChildSize: 0.6,
+    snap: true,
+    builder: builder,
   );
 }
 
@@ -455,7 +427,7 @@ class _StudyChaptersMenuState() extends ConsumerState<_StudyChaptersMenu> {
                 Navigator.of(context).pop();
                 if (!context.mounted) return;
 
-                showModalBottomSheet<void>(
+                showAdaptiveBottomSheet<void>(
                   context: context,
                   isScrollControlled: true,
                   useRootNavigator: true,

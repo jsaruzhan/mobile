@@ -46,7 +46,7 @@ class const SettingsScreen({super.key}) extends ConsumerWidget {
     final dbSize = ref.watch(getDbSizeInBytesProvider);
 
     return PlatformScaffold(
-      appBar: PlatformAppBar(title: Text(context.l10n.settingsSettings)),
+      appBar: PlatformAppBar(title: Text(context.l10n.settingsSettings), largeTitle: true),
       body: ListView(
         children: [
           if (authUser != null)
@@ -95,7 +95,10 @@ class const SettingsScreen({super.key}) extends ConsumerWidget {
                     ? const CupertinoListTileChevron()
                     : null,
                 onTap: () {
-                  Navigator.of(context).push(HomeTabScreen.buildRoute(editModeEnabled: true));
+                  Navigator.of(
+                    context,
+                    rootNavigator: true,
+                  ).push(HomeTabScreen.buildRoute(editModeEnabled: true));
                 },
               ),
               ListTile(
@@ -146,7 +149,7 @@ class const SettingsScreen({super.key}) extends ConsumerWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.storage_outlined),
-                title: const Text('Local database size'),
+                title: Text(context.l10n.mobileLocalDatabaseSize),
                 trailing: dbSize.hasValue ? Text(_getSizeString(dbSize.value)) : null,
               ),
               ListTile(
@@ -169,7 +172,7 @@ class const SettingsScreen({super.key}) extends ConsumerWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.star_outline),
-                title: const Text('Rate this app'),
+                title: Text(context.l10n.mobileRateThisApp),
                 onTap: () async {
                   final isAndroid = Theme.of(context).platform == TargetPlatform.android;
                   final launched = await launchUrl(

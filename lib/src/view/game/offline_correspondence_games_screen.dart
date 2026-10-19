@@ -1,12 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lichess_mobile/src/model/correspondence/correspondence_game_storage.dart';
 import 'package:lichess_mobile/src/model/correspondence/offline_correspondence_game.dart';
+import 'package:lichess_mobile/src/styles/icon_extensions.dart';
 import 'package:lichess_mobile/src/styles/styles.dart';
 import 'package:lichess_mobile/src/utils/l10n.dart';
 import 'package:lichess_mobile/src/utils/l10n_context.dart';
 import 'package:lichess_mobile/src/utils/navigation.dart';
 import 'package:lichess_mobile/src/view/correspondence/offline_correspondence_game_screen.dart';
 import 'package:lichess_mobile/src/widgets/board_preview.dart';
+import 'package:lichess_mobile/src/widgets/platform.dart';
 import 'package:lichess_mobile/src/widgets/user.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -18,8 +20,8 @@ class const OfflineCorrespondenceGamesScreen({super.key}) extends ConsumerWidget
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final offlineGames = ref.watch(offlineOngoingCorrespondenceGamesProvider);
-    return Scaffold(
-      appBar: AppBar(
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
         title: offlineGames.maybeWhen(
           data: (data) => Text(context.l10n.nbGamesInPlay(data.length)),
           orElse: () => const SizedBox.shrink(),
@@ -56,6 +58,7 @@ class const OfflineCorrespondenceGamePreview({
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SmallBoardPreview(
+      dimInDarkMode: true,
       orientation: game.orientation,
       lastMove: game.lastMove,
       fen: game.lastPosition.fen,

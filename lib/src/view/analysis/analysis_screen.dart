@@ -37,6 +37,7 @@ import 'package:lichess_mobile/src/widgets/bottom_bar.dart';
 import 'package:lichess_mobile/src/widgets/buttons.dart';
 import 'package:lichess_mobile/src/widgets/feedback.dart';
 import 'package:lichess_mobile/src/widgets/move_times_chart.dart';
+import 'package:lichess_mobile/src/widgets/platform.dart';
 import 'package:lichess_mobile/src/widgets/platform_context_menu_button.dart';
 import 'package:lichess_mobile/src/widgets/user.dart';
 import 'package:lichess_mobile/src/widgets/variant_app_bar_title.dart';
@@ -82,9 +83,11 @@ class _AnalysisScreenState() extends ConsumerState<_AnalysisScreen> {
             : VariantAppBarTitle(variant: value.variant, title: context.l10n.analysis);
 
         return WakelockWidget(
-          child: Scaffold(
+          child: PlatformScaffold(
+            extendBodyBehindAppBar: false,
             resizeToAvoidBottomInset: false,
-            appBar: AppBar(
+            appBar: PlatformAppBar(
+              compactButtons: true,
               title: appBarTitle,
               actions: [_AnalysisMenu(options: widget.options)],
             ),
@@ -99,10 +102,11 @@ class _AnalysisScreenState() extends ConsumerState<_AnalysisScreen> {
         _logger.severe('Cannot load analysis:', error, stackTrace);
         return FullScreenRetryRequest(onRetry: () => ref.invalidate(ctrlProvider));
       case _:
-        return Scaffold(
+        return const PlatformScaffold(
+          extendBodyBehindAppBar: false,
           resizeToAvoidBottomInset: false,
-          appBar: AppBar(title: const ExportedGameTitleLoading()),
-          body: const Center(child: CircularProgressIndicator.adaptive()),
+          appBar: PlatformAppBar(compactButtons: true, title: ExportedGameTitleLoading()),
+          body: Center(child: CircularProgressIndicator.adaptive()),
         );
     }
   }
@@ -362,35 +366,12 @@ class const _BottomBar({
           icon: CupertinoIcons.arrow_2_squarepath,
         ),
         if (analysisState.isComputerAnalysisAllowed)
-          Builder(
-            builder: (context) {
-              Future<void>? toggleFuture;
-              return FutureBuilder(
-                future: toggleFuture,
-                builder: (context, snapshot) {
-                  return EngineButton(
-                    filters: (
-                      context: analysisState.evaluationContext,
-                      path: analysisState.currentPath,
-                    ),
-                    savedEval: analysisState.currentNode.eval,
-                    onTap:
-                        analysisState.isEngineAllowed &&
-                            snapshot.connectionState != ConnectionState.waiting
-                        ? () async {
-                            toggleFuture = ref.read(ctrlProvider.notifier).toggleEngine();
-                            try {
-                              await toggleFuture;
-                            } finally {
-                              toggleFuture = null;
-                            }
-                          }
-                        : null,
-                    goDeeper: () => ref.read(ctrlProvider.notifier).requestEval(goDeeper: true),
-                  );
-                },
-              );
-            },
+          EngineToggleButton(
+            filters: (context: analysisState.evaluationContext, path: analysisState.currentPath),
+            savedEval: analysisState.currentNode.eval,
+            isEnabled: analysisState.isEngineAllowed,
+            onToggle: () => ref.read(ctrlProvider.notifier).toggleEngine(),
+            onGoDeeper: () => ref.read(ctrlProvider.notifier).requestEval(goDeeper: true),
           ),
         RepeatButton(
           onLongPress: analysisState.canGoBack ? () => _moveBackward(ref, fastSeek: true) : null,
@@ -556,7 +537,7 @@ class const _BottomBar({
           ),
           if (authUser != null)
             BottomSheetAction(
-              makeLabel: (context) => const Text('Add to study'), // TODO l10n
+              makeLabel: (context) => Text(context.l10n.mobileAddToStudy),
               onPressed: () => Navigator.of(context).push(
                 AddPgnToStudyScreen.buildRoute(
                   pgn: ref.read(analysisControllerProvider(options).notifier).makeExportPgn(),
@@ -634,8 +615,7 @@ class const _AnalysisMenu({required final AnalysisOptions options}) extends Cons
         // used to quickly analyze a position, so the engine must be allowed to access.
         if (analysisState.isComputerAnalysisAllowed)
           BottomSheetAction(
-            // TODO: l10n
-            makeLabel: (context) => const Text('Share local analysis PGN'),
+            makeLabel: (context) => Text(context.l10n.mobileShareLocalAnalysisPgn),
             onPressed: () {
               Navigator.of(context).push(AnalysisShareScreen.buildRoute(options: options));
             },

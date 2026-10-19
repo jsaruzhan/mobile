@@ -30,6 +30,7 @@ import 'package:lichess_mobile/src/widgets/bottom_bar.dart';
 import 'package:lichess_mobile/src/widgets/buttons.dart';
 import 'package:lichess_mobile/src/widgets/clock.dart';
 import 'package:lichess_mobile/src/widgets/game_layout.dart';
+import 'package:lichess_mobile/src/widgets/platform.dart';
 import 'package:lichess_mobile/src/widgets/yes_no_dialog.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -49,8 +50,9 @@ class const OverTheBoardScreen({
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return PlatformScaffold(
+      extendBodyBehindAppBar: false,
+      appBar: PlatformAppBar(
         title: Text(context.l10n.mobileOverTheBoard),
         actions: [
           SemanticIconButton(
@@ -113,11 +115,12 @@ class _BodyState() extends ConsumerState<_Body> {
     });
   }
 
-  void _saveGameState() {
+  Future<void> _saveGameState() async {
     if (!context.mounted) return;
+    ref.read(overTheBoardClockProvider.notifier).pause();
     final clockState = ref.read(overTheBoardClockProvider);
     final gameState = ref.read(overTheBoardGameControllerProvider);
-    ref
+    await ref
         .read(overTheBoardGameStorageProvider)
         .save(
           gameState.game,
@@ -171,7 +174,7 @@ class _BodyState() extends ConsumerState<_Body> {
               context: context,
               builder: (context) => YesNoDialog(
                 title: Text(context.l10n.threefoldRepetition),
-                content: const Text('Accept draw?'),
+                content: Text(context.l10n.mobileAcceptDraw),
                 onYes: () {
                   Navigator.pop(context);
                   ref.read(overTheBoardGameControllerProvider.notifier).draw();
@@ -191,41 +194,8 @@ class _BodyState() extends ConsumerState<_Body> {
 
     return WakelockWidget(
       child: PopScope(
-        canPop: false,
-        onPopInvokedWithResult: (didPop, _) async {
-          if (didPop) {
-            return;
-          }
-
-          final navigator = Navigator.of(context);
-          final game = gameState.game;
-          if (game.abortable || game.finished) {
-            return navigator.pop();
-          }
-
-          if (game.playable) {
-            ref.read(overTheBoardClockProvider.notifier).pause();
-          }
-
-          final shouldPop = await showAdaptiveDialog<bool>(
-            context: context,
-            builder: (context) {
-              return YesNoDialog(
-                title: Text(context.l10n.mobileAreYouSure),
-                content: const Text('No worries, your game will be saved.'),
-                onNo: () => Navigator.of(context).pop(false),
-                onYes: () {
-                  _saveGameState();
-                  Navigator.of(context).pop(true);
-                },
-              );
-            },
-          );
-          if (shouldPop == true) {
-            navigator.pop();
-          } else if (game.playable) {
-            ref.read(overTheBoardClockProvider.notifier).resume(gameState.turn);
-          }
+        onPopInvokedWithResult: (_, _) async {
+          await _saveGameState();
         },
         child: FocusDetector(
           onForegroundLost: _saveGameState,
@@ -454,9 +424,7 @@ class const _Player({required final Key clockKey, required final Side side})
   Widget build(BuildContext context, WidgetRef ref) {
     final gameState = ref.watch(overTheBoardGameControllerProvider);
     final boardPreferences = ref.watch(boardPreferencesProvider);
-    final clock = ref.watch(overTheBoardClockProvider);
-    final clockTenths =
-        ref.watch(clockTenthsProvider).value ?? defaultAccountPreferences.clockTenths;
+    final timeIncrement = ref.watch(overTheBoardClockProvider.select((c) => c.timeIncrement));
 
     return GamePlayer(
       game: gameState.game,
@@ -466,17 +434,28 @@ class const _Player({required final Key clockKey, required final Side side})
           : null,
       materialDifferenceFormat: boardPreferences.materialDifferenceFormat,
       shouldLinkToUserProfile: false,
-      clock: clock.timeIncrement.isInfinite
-          ? null
-          : Clock(
-              timeLeft: Duration(milliseconds: max(0, clock.timeLeft(side)!.inMilliseconds)),
-              key: clockKey,
-              active: clock.activeClock == side,
-              emergencyThreshold: Duration(
-                seconds: (clock.timeIncrement.time * 0.125).clamp(10, 60).toInt(),
-              ),
-              clockTenths: clockTenths,
-            ),
+      clock: timeIncrement.isInfinite ? null : _OtbPlayerClock(side: side, clockKey: clockKey),
+    );
+  }
+}
+
+/// The clock of [side], self-watching so that a running clock rebuilds only itself.
+class const _OtbPlayerClock({required final Side side, required final Key clockKey})
+    extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final clock = ref.watch(overTheBoardClockProvider);
+    final clockTenths =
+        ref.watch(clockTenthsProvider).value ?? defaultAccountPreferences.clockTenths;
+
+    return Clock(
+      key: clockKey,
+      timeLeft: Duration(milliseconds: max(0, clock.timeLeft(side)!.inMilliseconds)),
+      active: clock.activeClock == side,
+      emergencyThreshold: Duration(
+        seconds: (clock.timeIncrement.time * 0.125).clamp(10, 60).toInt(),
+      ),
+      clockTenths: clockTenths,
     );
   }
 }

@@ -61,71 +61,68 @@ class _EngineButtonState() extends ConsumerState<EngineButton> {
       clipBehavior: Clip.none,
       alignment: Alignment.center,
       children: [
-        SemanticIconButton(
-          semanticsLabel: context.l10n.toggleLocalEvaluation,
-          onPressed: widget.onTap,
-          onLongPress: () {
-            showPopover(
-              context: context,
-              bodyBuilder: (_) {
-                return _EnginePopup(goDeeper: widget.goDeeper, filters: widget.filters);
-              },
-              direction: PopoverDirection.top,
-              width: 250,
-              backgroundColor:
-                  DialogTheme.of(context).backgroundColor ??
-                  ColorScheme.of(context).surfaceContainerHigh,
-              transitionDuration: Duration.zero,
-              popoverTransitionBuilder: (_, child) => child,
-            );
-          },
-          icon: Badge(
-            offset: const Offset(4, -7),
-            backgroundColor: ColorScheme.of(context).tertiaryContainer,
-            textColor: ColorScheme.of(context).onTertiaryContainer,
-            label: prefs.isEnabled && eval is CloudEval ? const Text('CLOUD') : null,
-            textStyle: const TextStyle(fontSize: 8),
-            isLabelVisible: prefs.isEnabled && eval is CloudEval,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                TweenAnimationBuilder<Color?>(
-                  curve: Curves.easeInOut,
-                  tween: ColorTween(begin: fromChipColor, end: toChipColor),
-                  duration: const Duration(milliseconds: 300),
-                  builder: (BuildContext context, Color? color, Widget? _) {
-                    return CustomPaint(
-                      size: const Size(microChipSize, microChipSize),
-                      painter: MicroChipPainter(color ?? toChipColor!),
-                    );
-                  },
-                ),
-                SizedBox(
-                  width: microChipSize,
-                  height: microChipSize,
-                  child: RepaintBoundary(
-                    child: Center(
-                      child: prefs.isEnabled
-                          ? eval is CloudEval
-                                ? Text('${math.min(99, eval.depth)}', style: iconTextStyle)
-                                : switch (engine) {
-                                    // No engine has been asked for yet.
-                                    null => Text('-', style: iconTextStyle),
-                                    AsyncError() => Text('!', style: iconTextStyle),
-                                    AsyncValue(isLoading: true) => loadingIndicator,
-                                    _ =>
-                                      eval?.depth != null
-                                          ? Text(
-                                              '${math.min(99, eval!.depth)}',
-                                              style: iconTextStyle,
-                                            )
-                                          : loadingIndicator,
-                                  }
-                          : const SizedBox.shrink(),
+        PlatformPopover(
+          width: 250,
+          direction: PopoverDirection.top,
+          // The engine details are content, hard to read on glass over the board.
+          opaque: true,
+          bodyBuilder: (_) => _EnginePopup(
+            goDeeper: widget.goDeeper,
+            filters: widget.filters,
+            savedEval: widget.savedEval,
+          ),
+          triggerBuilder: (context, showPopover) => SemanticIconButton(
+            semanticsLabel: context.l10n.toggleLocalEvaluation,
+            onPressed: widget.onTap,
+            onLongPress: showPopover,
+            icon: Badge(
+              offset: const Offset(4, -7),
+              backgroundColor: ColorScheme.of(context).tertiaryContainer,
+              textColor: ColorScheme.of(context).onTertiaryContainer,
+              label: prefs.isEnabled && eval is CloudEval ? const Text('CLOUD') : null,
+              textStyle: const TextStyle(fontSize: 8),
+              isLabelVisible: prefs.isEnabled && eval is CloudEval,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  TweenAnimationBuilder<Color?>(
+                    curve: Curves.easeInOut,
+                    tween: ColorTween(begin: fromChipColor, end: toChipColor),
+                    duration: const Duration(milliseconds: 300),
+                    builder: (BuildContext context, Color? color, Widget? _) {
+                      return CustomPaint(
+                        size: const Size(microChipSize, microChipSize),
+                        painter: MicroChipPainter(color ?? toChipColor!),
+                      );
+                    },
+                  ),
+                  SizedBox(
+                    width: microChipSize,
+                    height: microChipSize,
+                    child: RepaintBoundary(
+                      child: Center(
+                        child: prefs.isEnabled
+                            ? eval is CloudEval
+                                  ? Text('${math.min(99, eval.depth)}', style: iconTextStyle)
+                                  : switch (engine) {
+                                      // No engine has been asked for yet.
+                                      null => Text('-', style: iconTextStyle),
+                                      AsyncError() => Text('!', style: iconTextStyle),
+                                      AsyncValue(isLoading: true) => loadingIndicator,
+                                      _ =>
+                                        eval?.depth != null
+                                            ? Text(
+                                                '${math.min(99, eval!.depth)}',
+                                                style: iconTextStyle,
+                                              )
+                                            : loadingIndicator,
+                                    }
+                            : const SizedBox.shrink(),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -141,6 +138,48 @@ class _EngineButtonState() extends ConsumerState<EngineButton> {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Toggle button for engine evaluation with a guard against concurrent toggles.
+///
+/// Encapsulates the [Builder]+[FutureBuilder] pattern that disables the button while a
+/// toggle request is in flight. Callers differ only in how they compute [filters],
+/// [savedEval], [isEnabled], [onToggle] and [onGoDeeper].
+class const EngineToggleButton({
+  required final EngineEvaluationFilters filters,
+  final ClientEval? savedEval,
+  final bool isEnabled = true,
+  required final Future<void> Function() onToggle,
+  required final VoidCallback onGoDeeper,
+}) extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        Future<void>? toggleFuture;
+        return FutureBuilder(
+          future: toggleFuture,
+          builder: (context, snapshot) {
+            return EngineButton(
+              filters: filters,
+              savedEval: savedEval,
+              onTap: isEnabled && snapshot.connectionState != ConnectionState.waiting
+                  ? () async {
+                      toggleFuture = onToggle();
+                      try {
+                        await toggleFuture;
+                      } finally {
+                        toggleFuture = null;
+                      }
+                    }
+                  : null,
+              goDeeper: onGoDeeper,
+            );
+          },
+        );
+      },
     );
   }
 }
@@ -269,22 +308,23 @@ class const MicroChipPainter(final Color color) extends CustomPainter {
 class const _EnginePopup({
   final VoidCallback? goDeeper,
   required final EngineEvaluationFilters filters,
+  final ClientEval? savedEval,
 }) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final (:engine, :engineSpec, currentWork: work, eval: evalStateEval, :isComputing) = ref.watch(
+    final (:engine, :engineSpec, currentWork: work, eval: localEval, :isComputing) = ref.watch(
       engineEvaluationProvider(filters),
     );
     final bool canGoDeeper =
         goDeeper != null && !isComputing && (work == null || work.isDeeper != true);
 
-    final currentEval = engine?.hasValue == true ? evalStateEval : null;
+    final currentEval = pickBestClientEval(localEval: localEval, savedEval: savedEval);
 
     if (currentEval is CloudEval) {
       return ListTile(
         contentPadding: const EdgeInsets.only(left: 16.0),
         title: Text(context.l10n.cloudAnalysis),
-        subtitle: Text(context.l10n.depthX('${currentEval!.depth}')),
+        subtitle: Text(context.l10n.depthX('${currentEval.depth}')),
         trailing: canGoDeeper
             ? IconButton(
                 icon: const Icon(Icons.add_circle_outlined),
@@ -295,7 +335,7 @@ class const _EnginePopup({
       );
     }
 
-    final knps = isComputing ? ', ${evalStateEval?.knps.round()}kn/s' : '';
+    final knps = isComputing ? ', ${localEval?.knps.round()}kn/s' : '';
 
     final displayName = engineDisplayName(engine?.value, spec: engineSpec);
 

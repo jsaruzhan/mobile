@@ -169,7 +169,7 @@
   <string name="illegalPosition">وضعیتِ ناقانونی</string>
   <string name="threefoldRepetition">تکرار سه‌گانه</string>
   <string name="claimADraw">ادعای تساوی</string>
-  <string name="drawClaimed">بازی در تساوی پایان یافت</string>
+  <string name="drawClaimed">اعلامِ تساوی</string>
   <string name="offerDraw">پیشنهاد مساوی</string>
   <string name="draw">مساوی</string>
   <plurals name="nbPlayers">
@@ -557,7 +557,12 @@
   <string name="automaticallyProceedToNextGameAfterMoving">پس از حرکت، خودکار به بازی بعدی روید</string>
   <string name="autoSwitch">تعویض خودکار</string>
   <string name="puzzles">معما</string>
-  <string name="onlineBots">ربات‌های بَرخط</string>
+  <string name="onlineBots">رَت‌های بَرخط</string>
+  <string name="aboutBotsOnLichess">درباره رَت‌ها در Lichess</string>
+  <string name="featuredBots">رَت‌های آرَنگیده</string>
+  <string name="tryPlayingTheseInnovativeChessEngines">این موتورهای شطرنج نوآورانه را بیازمایید! آنها موتورهای دلپسندِ ما هستند.</string>
+  <string name="communityBots">رَت‌های همدارگان</string>
+  <string name="moreChessEnginesCreatedByTheLichessCommunity">موتورهای شطرنجِ بیشتری توسط همدارگانِ Lichess ایجاد شده‌اند. آنها را ایجادگران‌شان میزبانی می‌کنند و ممکن است همیشه بَرخط نباشند.</string>
   <string name="name">نام</string>
   <string name="description">شرح</string>
   <string name="descPrivate">توضیحات خصوصی</string>
@@ -583,14 +588,12 @@
   <string name="reportAUser">گزارش یک کاربر</string>
   <string name="user">کاربر</string>
   <string name="reason">دلیل</string>
-  <string name="whatIsIheMatter">موضوع</string>
   <string name="cheat">تقلب</string>
   <string name="troll">وِزُل</string>
   <string name="other">دیگر</string>
   <string name="reportCheatBoostHelp">پیوند بازی(ها) را جای‌گذارید و بشرحید که چه رفتاری از این کاربر مشکل دارد. فقط نگویید «آنها تقلب‌کارند»، بلکه به ما بگویید چطور به این نتیجه رسیده‌اید.</string>
   <string name="reportUsernameHelp">بشرحید چه چیز این نام‌کاربری آزارنده است. فقط نگویید «آزارنده/نامناسب است»، بلکه به ما بگویید چطور به این نتیجه رسیده‌اید، به‌ویژه اگر توهین: گنگ است، انگلیسی نیست، کوچه‌بازاری است، یا یک ارجاع تاریخی/فرهنگی است.</string>
   <string name="processReportFasterInEnglish" comment="Appears on the &quot;Report a user&quot; page https://lichess.org/report, to encourage users to write in English, so any Lichess moderator can process it.">اگر به انگلیسی بنویسید، می‌توانیم سریع‌تر به گزارش‌تان رسیدگی کنیم.</string>
-  <string name="error.provideOneCheatedGameLink">لطفآ حداقل یک نمونه تقلب در بازی را مطرح کنید.</string>
   <string name="by">به‌دستِ %s</string>
   <string name="importedByX">%s آن را وارد کرده</string>
   <string name="thisTopicIsNowClosed">این موضوع بسته شده است</string>
@@ -605,6 +608,7 @@
   <string name="clearField">پاکیدنِ میدان</string>
   <string name="orSeparator">یا</string>
   <string name="logInByEmail">ورود با رایانامه</string>
+  <string name="emailLoginInstructions">رایانامه‌ای با محتوای پیوندِ ورود به شما خواهیم فرستاد.</string>
   <string name="emailMeALink">پیوندی به رایانامه‌ام بفرست</string>
   <string name="currentPassword">گذرواژهٔ جاری</string>
   <string name="newPassword">گذرواژهٔ نو</string>
@@ -629,6 +633,8 @@
   <string name="onSlowGames">در بازی های آرام</string>
   <string name="always">همیشه</string>
   <string name="never">هرگز</string>
+  <string name="defeatOnly">فقط شکست</string>
+  <string name="drawAndDefeat">مساوی و شکست</string>
   <string name="xCompetesInY">%1$s در %2$s رقابت می‌کند.</string>
   <string name="victory">پیروزی!</string>
   <string name="defeat">شکست</string>
@@ -693,10 +699,13 @@
   <string name="aboutX">درباره %s</string>
   <string name="xIsAFreeYLibreOpenSourceChessServer">وبگاه %1$s (%2$s) رایگان، آزاد، بی‌تبلیغ و با کارسازِ متن‌بازِ شطرنج است.</string>
   <string name="really">واقعاً</string>
+  <string name="lichessUpdates">روزامدهای Lichess</string>
   <string name="contribute">مشارکت</string>
+  <string name="changelog">تغییرشرح</string>
   <string name="termsOfService">شرایطِ استفاده</string>
   <string name="titleVerification">تائید عنوان</string>
   <string name="sourceCode">کد منبع</string>
+  <string name="blockAds">انسدادِ آگهی‌ها</string>
   <string name="simultaneousExhibitions">بازیِ هَمگاه</string>
   <string name="host">میزبان</string>
   <string name="hostColorX">رنگ میزبان: %s</string>
@@ -1047,4 +1056,6 @@
   <string name="verifyingYourDevice">تأییدِ اَفزاره‌تان...</string>
   <string name="chessOpenings">گشایش‌های شطرنج</string>
   <string name="boards">میز‌ها</string>
+  <string name="write">نوشتن</string>
+  <string name="preview">پیشنما</string>
 </resources>

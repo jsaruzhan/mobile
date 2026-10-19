@@ -5,6 +5,7 @@ import 'package:lichess_mobile/src/constants.dart';
 import 'package:lichess_mobile/src/model/common/id.dart';
 import 'package:lichess_mobile/src/model/common/perf.dart';
 import 'package:lichess_mobile/src/model/user/profile.dart';
+import 'package:lichess_mobile/src/styles/icon_extensions.dart';
 import 'package:lichess_mobile/src/utils/json.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -56,7 +57,7 @@ extension LightUserExtension on Pick {
         isOnline: requiredPick('online').asBoolOrNull(),
       );
     }
-    throw PickException("value $value at $debugParsingExit can't be casted to LightUser");
+    throw PickException.fromPick(this, "can't be casted to LightUser");
   }
 
   LightUser? asLightUserOrNull() {
