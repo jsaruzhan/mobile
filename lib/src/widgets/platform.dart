@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart' show ValueListenable, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart' show ConsumerWidget, WidgetRef;
 import 'package:lichess_mobile/src/styles/styles.dart';
 import 'package:lichess_mobile/src/tab_navigation.dart';
+import 'package:lichess_mobile/src/theme.dart';
 import 'package:lichess_mobile/src/widgets/adaptive_bottom_sheet.dart'
     show NavigationSheetScope, showAdaptiveNavigationSheet;
 import 'package:lichess_mobile/src/widgets/buttons.dart' show SemanticIconButton;
@@ -175,11 +176,12 @@ LiquidGlassSettings ios27GlassSettings(BuildContext context) =>
 LiquidGlassSettings menuGlassSettings(BuildContext context) =>
     Theme.of(context).brightness == Brightness.light
     ? LiquidGlassSettings.ios27Light.copyWith(
-        frost: 30,
+        frost: 40,
+        thickness: 50,
         frostOpacity: 0.94,
         shadow: const [BoxShadow(color: Color(0x1F000000), blurRadius: 40, offset: Offset(0, 12))],
       )
-    : LiquidGlassSettings.ios27Dark.copyWith(frost: 30, frostOpacity: 0.96);
+    : LiquidGlassSettings.ios27Dark.copyWith(frost: 40, thickness: 50, frostOpacity: 0.98);
 
 /// A thicker glass than [ios27GlassSettings], more frosted, for liquid glass buttons that must stand
 /// out over busy content (e.g. over the moves of an analysis).
@@ -312,6 +314,10 @@ class const PlatformScaffold({
 
   /// See [Scaffold.resizeToAvoidBottomInset].
   final bool? resizeToAvoidBottomInset,
+
+  /// Whether the body is a plain list, whose rows are directly on the background rather than in
+  /// cards: it then has the [CustomTheme.plainListBackground], when the theme defines one.
+  final bool plainList = false,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -372,10 +378,11 @@ class const PlatformScaffold({
     final iconTheme = IconTheme.of(context);
 
     // The app bar is outside of the inner Scaffold: provide a Material for its text and actions.
+    final plainListBackground = plainList ? context.lichessTheme.plainListBackground : null;
     final glassScaffold = Material(
       type: MaterialType.transparency,
       child: GlassScaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: plainListBackground ?? Theme.of(context).scaffoldBackgroundColor,
         // The background is a plain color, there is nothing worth sampling.
         enableBackgroundSampling: false,
         statusBarStyle: .auto,
@@ -471,7 +478,16 @@ class const PlatformScaffold({
       ),
     );
 
-    return hasLargeTitle ? _LargeTitleScrollScope(child: glassScaffold) : glassScaffold;
+    final themedScaffold = plainListBackground != null
+        // The body widgets that paint the background color (scroll edge effects, pinned headers)
+        // read it from the theme.
+        ? Theme(
+            data: Theme.of(context).copyWith(scaffoldBackgroundColor: plainListBackground),
+            child: glassScaffold,
+          )
+        : glassScaffold;
+
+    return hasLargeTitle ? _LargeTitleScrollScope(child: themedScaffold) : themedScaffold;
   }
 }
 
@@ -907,11 +923,21 @@ class const PlatformAppBar({
         final foregroundColor = colorScheme.onSurface;
         // The shell builds the items in its own context: they get the themes of the screen and
         // the icon color of the bar.
+        //
+        // The shell builds a custom item twice: in the route, unpainted, to lay out the bar, and
+        // above the navigator, where it is seen. A hero in it (e.g. a [SearchHeroButton]) is only
+        // enabled in the route, where the transitions of this navigator look for it: above the
+        // navigator, the transitions of the parent navigator would find it next to the one in the
+        // route (multiple heroes with the same tag).
+        final routeNavigator = Navigator.maybeOf(context);
         Widget captured(Widget child) => InheritedTheme.captureAll(
           context,
           IconTheme.merge(
             data: IconThemeData(color: foregroundColor),
-            child: child,
+            child: Builder(
+              builder: (context) =>
+                  HeroMode(enabled: Navigator.maybeOf(context) == routeNavigator, child: child),
+            ),
           ),
         );
         // The glyph of an icon or menu item, sized by the shell (no captured icon theme).
