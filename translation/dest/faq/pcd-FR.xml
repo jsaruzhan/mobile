@@ -65,7 +65,7 @@ Il est décrit dans la section 3.7 (d) des %2$s :
 Voir les %3$s sur ce coup pour vous entraîner.</string>
   <string name="goodIntroduction">bonne introduction</string>
   <string name="lichessTraining">Entraînement Lichess</string>
-  <string name="watchIMRosenCheckmate">Regardez le maître international Eric Rosen mater %s.</string>
+  <string name="watchIMRosenCheckmate">Regardez le maître international Eric Rosen faire mat &lt;a href=\'%s\' target=\'_blank\'&gt;« en passant »&lt;/a&gt;.</string>
   <string name="threefoldRepetition">Triple répétition</string>
   <string name="threefoldRepetitionExplanation">Si une position se produit trois fois, les joueurs peuvent prétendre à un pat par %1$s. Lichess applique les règles officielles de la FIDE, telles que décrites dans l\'article 9.2 des %2$s.</string>
   <string name="threefoldRepetitionLowerCase">triple répétition</string>
@@ -165,6 +165,8 @@ Nous affichons l\'icône de sourdine en rouge pour vous avertir lorsque cela se 
 3. Cliquez sur Cookies et Autorisations du site
 4. Faites défiler la page vers le bas et cliquez sur Lecture automatique du support
 5. Ajoutez lichess.org pour autoriser</string>
+  <string name="makeBotTitle">Créer un bot sur Lichess?</string>
+  <string name="makeBotDescription">Pour apprendre à créer un &lt;a href=\'%1$s\'&gt;bot d\'échecs personnalisé&lt;/a&gt; sur Lichess, veuillez lire &lt;a href=\'%2$s\'&gt;cette publication de blogue sur la création de bots&lt;/a&gt;.</string>
   <string name="stopMyselfFromPlaying">Devrais-je arrêter de jouer?</string>
   <string name="mentalHealthCondition">problème de santé mentale distinct</string>
   <string name="lichessUserstyles">styles utilisateur de Lichess</string>

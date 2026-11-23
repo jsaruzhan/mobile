@@ -66,7 +66,6 @@ Es descriu en la secció 3.7 (d) de les %2$s:
 Veure el capítol de %3$s sobre aquest moviment per practicar-lo.</string>
   <string name="goodIntroduction">bona introducció</string>
   <string name="lichessTraining">Entrenament de Lichess</string>
-  <string name="watchIMRosenCheckmate">Mireu l\'escac i mat %s del Mestre Internacional Eric Rosen.</string>
   <string name="threefoldRepetition">Triple repetició</string>
   <string name="threefoldRepetitionExplanation">Si una posició es dóna tres vegades, els jugadors poden reclamar taules per %1$s. Lichess implementa les regles oficials de la FIDE, d\'acord amb l\'article 9.2 del %2$s.</string>
   <string name="threefoldRepetitionLowerCase">triple repetició</string>
@@ -167,6 +166,8 @@ Mostrem la icona vermella per a avisar-te quan això ocorre. Sovint pots permetr
 3. Cliqueu Galetes i Permisos del lloc
 4. Desplaceu-se cap avall i cliqueu Reproducció automàtica de contingut multimèdia
 5. Afegiu lichess.org a Permet</string>
+  <string name="makeBotTitle">Crear un bot a Lichess?</string>
+  <string name="makeBotDescription">Per aprendre com crear un &lt;a href=\'%1$s\'&gt;bot d\'escacs personalitzat&lt;/a&gt; per jugar a Lichess, si us plau llegiu &lt;a href=\'%2$s\'&gt;aquesta entrada del blog sobre la creació de bots&lt;/a&gt;.</string>
   <string name="stopMyselfFromPlaying">Refrenar-me de jugar?</string>
   <string name="mentalHealthCondition">trastorn de salut mental independent</string>
   <string name="lichessUserstyles">aparences personalitzades de Lichess</string>

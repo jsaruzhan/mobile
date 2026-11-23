@@ -57,7 +57,6 @@
 %3$sでアンパッサンを練習することができます。</string>
   <string name="goodIntroduction">参考</string>
   <string name="lichessTraining">Lichess のトレーニング機能</string>
-  <string name="watchIMRosenCheckmate">IM Eric Rosen が %s をメイトするところをご覧ください。</string>
   <string name="threefoldRepetition">同形三復について</string>
   <string name="threefoldRepetitionExplanation">同じ局面が 3 回起きたら、申し立てをすることで%1$sのドローになります。Lichess は FIDE の公式ルール、%2$sの第 9.2 項を実装しています。</string>
   <string name="threefoldRepetitionLowerCase">同形三復</string>
@@ -148,6 +147,8 @@
 3. 「Cookie とサイトのアクセス許可」をクリック
 4. スクロールして「メディアの自動再生」をクリック
 5. 「許可」に lichess.org を追加</string>
+  <string name="makeBotTitle">Lichess で動くボットを作るには？</string>
+  <string name="makeBotDescription">Lichess で動く&lt;a href=\'%1$s\'&gt;独自のチェスボット&lt;/a&gt;の作り方については、&lt;a href=\'%2$s\'&gt;このブログ記事&lt;/a&gt;をお読みください。</string>
   <string name="stopMyselfFromPlaying">チェスのやりすぎを止めるには？</string>
   <string name="mentalHealthCondition">独立した疾病</string>
   <string name="lichessUserstyles">Lichess ユーザースタイル</string>

@@ -14,6 +14,7 @@ import 'package:lichess_mobile/src/utils/duration.dart';
 import 'package:lichess_mobile/src/utils/l10n_context.dart';
 import 'package:lichess_mobile/src/utils/rate_limit.dart';
 import 'package:lichess_mobile/src/widgets/adaptive_bottom_sheet.dart';
+import 'package:lichess_mobile/src/widgets/feedback.dart';
 import 'package:lichess_mobile/src/widgets/list.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -32,47 +33,47 @@ Color? _nagColor(BuildContext context, int nag) {
     1 => Colors.lightGreen.harmonizeWith(colorScheme.primary),
     2 => context.lichessColors.brag,
     3 => Colors.teal.harmonizeWith(colorScheme.primary),
-    4 => context.lichessColors.error,
+    4 => context.lichessColors.red,
     5 => context.lichessColors.purple,
     6 => context.lichessColors.cyan,
     int() => null,
   };
 }
 
+/// Canonical NAG annotation table: NAG code → (symbol, color).
+///
+/// Single source of truth for [moveAnnotationChar] and [makeAnnotation].
+// sources: https://github.com/lichess-org/scalachess/blob/3f96a2935ee2ee670def67632171ffcea7c96b6d/core/src/main/scala/format/pgn/Glyph.scala
+// https://en.wikipedia.org/wiki/Portable_Game_Notation
+const Map<int, ({String symbol, Color color})> _nagAnnotations = {
+  1: (symbol: '!', color: Colors.lightGreen),
+  2: (symbol: '?', color: LichessColors.mistake),
+  3: (symbol: '!!', color: Colors.teal),
+  4: (symbol: '??', color: LichessColors.blunder),
+  5: (symbol: '!?', color: Colors.purple),
+  6: (symbol: '?!', color: LichessColors.inaccuracy),
+  8: (symbol: '□', color: Colors.grey),
+  10: (symbol: '=', color: Colors.grey),
+  11: (symbol: '=', color: Colors.grey),
+  13: (symbol: '∞', color: Colors.grey),
+  14: (symbol: '⩲', color: Colors.grey),
+  15: (symbol: '⩱', color: Colors.grey),
+  16: (symbol: '±', color: Colors.grey),
+  17: (symbol: '∓', color: Colors.grey),
+  18: (symbol: '+-', color: Colors.grey),
+  19: (symbol: '-+', color: Colors.grey),
+  22: (symbol: '⨀', color: Colors.grey),
+  32: (symbol: '⟳', color: Colors.grey),
+  36: (symbol: '↑', color: Colors.grey),
+  44: (symbol: '=∞', color: Colors.grey),
+  132: (symbol: '⇆', color: Colors.grey),
+  138: (symbol: '⊕', color: Colors.grey),
+  140: (symbol: '∆', color: Colors.grey),
+  146: (symbol: 'N', color: Colors.grey),
+};
+
 String moveAnnotationChar(Iterable<int> nags) {
-  return nags
-      .map(
-        //sources: https://github.com/lichess-org/scalachess/blob/3f96a2935ee2ee670def67632171ffcea7c96b6d/core/src/main/scala/format/pgn/Glyph.scala
-        //https://en.wikipedia.org/wiki/Portable_Game_Notation
-        (nag) => switch (nag) {
-          1 => '!',
-          2 => '?',
-          3 => '!!',
-          4 => '??',
-          5 => '!?',
-          6 => '?!',
-          8 => '□',
-          10 => '=',
-          11 => '=',
-          13 => '∞',
-          14 => '⩲',
-          15 => '⩱',
-          16 => '±',
-          17 => '∓',
-          18 => '+-',
-          19 => '-+',
-          22 => '⨀',
-          32 => '⟳',
-          36 => '↑',
-          44 => '=∞',
-          132 => '⇆',
-          138 => '⊕',
-          140 => '∆',
-          146 => 'N',
-          int() => '',
-        },
-      )
-      .join('');
+  return nags.map((nag) => _nagAnnotations[nag]?.symbol ?? '').join('');
 }
 
 Annotation? makeAnnotation(Iterable<int>? nags) {
@@ -80,50 +81,16 @@ Annotation? makeAnnotation(Iterable<int>? nags) {
   if (nag == null) {
     return null;
   }
-  return switch (nag) {
-    1 => const Annotation(symbol: '!', color: Colors.lightGreen),
-    3 => const Annotation(symbol: '!!', color: Colors.teal),
-    5 => const Annotation(symbol: '!?', color: Colors.purple),
-    6 => const Annotation(symbol: '?!', color: LichessColors.inaccuracy),
-    2 => const Annotation(symbol: '?', color: LichessColors.mistake),
-    4 => const Annotation(symbol: '??', color: LichessColors.blunder),
-    8 => const Annotation(symbol: '□', color: Colors.grey),
-    10 => const Annotation(symbol: '=', color: Colors.grey),
-    11 => const Annotation(symbol: '=', color: Colors.grey),
-    13 => const Annotation(symbol: '∞', color: Colors.grey),
-    14 => const Annotation(symbol: '⩲', color: Colors.grey),
-    15 => const Annotation(symbol: '⩱', color: Colors.grey),
-    16 => const Annotation(symbol: '±', color: Colors.grey),
-    17 => const Annotation(symbol: '∓', color: Colors.grey),
-    18 => const Annotation(symbol: '+-', color: Colors.grey),
-    19 => const Annotation(symbol: '-+', color: Colors.grey),
-    22 => const Annotation(symbol: '⨀', color: Colors.grey),
-    32 => const Annotation(symbol: '⟳', color: Colors.grey),
-    36 => const Annotation(symbol: '↑', color: Colors.grey),
-    44 => const Annotation(symbol: '=∞', color: Colors.grey),
-    132 => const Annotation(symbol: '⇆', color: Colors.grey),
-    138 => const Annotation(symbol: '⊕', color: Colors.grey),
-    140 => const Annotation(symbol: '∆', color: Colors.grey),
-    146 => const Annotation(symbol: 'N', color: Colors.grey),
-    int() => null,
-  };
+  final annotation = _nagAnnotations[nag];
+  if (annotation == null) {
+    return null;
+  }
+  return Annotation(symbol: annotation.symbol, color: annotation.color);
 }
 
 // fast replay debounce delay, same as piece animation duration, to avoid piece
 // animation jank at the end of the replay
 const kFastReplayDebounceDelay = Duration(milliseconds: 150);
-
-/// Callbacks for interaction with [DebouncedPgnTreeView]
-abstract class PgnTreeNotifier() {
-  void expandVariations(UciPath path);
-  void collapseVariations(UciPath path);
-  void promoteVariation(UciPath path, bool toMainLine);
-  void deleteFromHere(UciPath path);
-  void userJump(UciPath path);
-
-  /// Exports the line going through [path] as a PGN string, see [Node.makeLinePgn].
-  String makeLinePgn(UciPath path, {required bool includeVariations});
-}
 
 enum PgnTreeDisplayMode() {
   /// Mainline moves are displayed in a table with two columns, where the first column are moves by white and the second column are moves by black.
@@ -211,12 +178,16 @@ class _DebouncedPgnTreeViewState() extends ConsumerState<DebouncedPgnTreeView> {
 
     // Scrollable.ensureVisible breaks animation when swiping between tabs (see https://github.com/lichess-org/mobile/issues/1232)
     // Explicitly use the Scrollable of our TreeView instead, so that it won't affect the TabController's state.
+    //
+    // The current move is centered, as when it changes (see [didUpdateWidget]): scrolling it only
+    // into view would leave it at the bottom edge of the viewport, under the bars floating over
+    // the moves.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (currentMoveKey.currentContext != null) {
         Scrollable.of(currentMoveKey.currentContext!).position.ensureVisible(
           currentMoveKey.currentContext!.findRenderObject()!,
           alignment: 0.5,
-          alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+          alignmentPolicy: ScrollPositionAlignmentPolicy.explicit,
         );
       }
     });
@@ -410,6 +381,11 @@ class _PgnTreeViewState() extends State<_PgnTreeView> {
   }
 
   List<_CachedRenderedSubtree> _buildChangedSubtrees({required bool fullRebuild}) {
+    // Depends only on the root and the current path, so it must not be recomputed per part:
+    // each call walks the whole mainline and allocates a few strings per node.
+    final mainlinePartOfCurrentPath = _mainlinePartOfCurrentPath();
+    final currentMoveIsOnMainline = mainlinePartOfCurrentPath == widget.params.pathToCurrentMove;
+
     var path = UciPath.empty;
     return mainlineParts
         .mapIndexed((i, mainlineNodes) {
@@ -426,10 +402,6 @@ class _PgnTreeViewState() extends State<_PgnTreeView> {
           if (mainlineNodes.last.children.isNotEmpty) {
             path = path + mainlineNodes.last.children.first.id;
           }
-
-          final mainlinePartOfCurrentPath = _mainlinePartOfCurrentPath();
-          final currentMoveIsOnMainline =
-              mainlinePartOfCurrentPath == widget.params.pathToCurrentMove;
 
           final containsCurrentMove = currentMoveIsOnMainline
               ? mainlinePartOfCurrentPath.size > mainlineInitialPath.size &&
@@ -707,7 +679,6 @@ class const _TwoColumnMainlinePart({
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final dividerColor = theme.dividerColor;
-    final brightness = theme.brightness;
     final textStyle = _baseTextStyle.copyWith(color: _textColor(context, 0.9));
 
     final threeDots = Container(padding: kInlineMovePadding, child: const Text('...'));
@@ -754,14 +725,10 @@ class const _TwoColumnMainlinePart({
         Container(
           padding: const EdgeInsets.only(top: 4, right: kViewHorizontalPadding, bottom: 4),
           decoration: BoxDecoration(
-            color: brightness == Brightness.dark
-                ? const Color(0x0BFFFFFF)
-                : const Color(0x05000000),
             border: Border(
               top: isFirstPart && !params.showTopDivider
                   ? BorderSide.none
                   : BorderSide(color: dividerColor),
-              bottom: BorderSide(color: dividerColor),
             ),
           ),
           child: Row(
@@ -1234,9 +1201,8 @@ class const InlineMove({
       onTap: params.notifier != null ? () => params.notifier?.userJump(path) : null,
       onLongPress: params.notifier != null
           ? () {
-              showModalBottomSheet<void>(
+              showAdaptiveBottomSheet<void>(
                 context: context,
-                isDismissible: true,
                 isScrollControlled: true,
                 showDragHandle: true,
                 builder: (context) => _MoveContextMenu(
@@ -1381,10 +1347,11 @@ class const _MoveContextMenu({
             // The result token and trailing newline belong in a PGN file, not on the clipboard.
             final line = pgn.trimRight().replaceFirst(RegExp(r'\s*\*$'), '');
             // The bottom sheet can be disposed before the clipboard write completes.
-            final messenger = ScaffoldMessenger.of(context);
+            final snackBar = SnackBarPresenter.of(context);
+            final copiedMessage = context.l10n.mobilePgnCopied;
             await Clipboard.setData(ClipboardData(text: line));
-            if (!messenger.mounted) return;
-            messenger.showSnackBar(const SnackBar(content: Text('PGN copied.'))); // TODO l10n
+            if (!snackBar.mounted) return;
+            snackBar.show(copiedMessage);
           },
         ),
         BottomSheetContextMenuAction(

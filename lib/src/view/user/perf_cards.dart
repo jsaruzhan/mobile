@@ -1,6 +1,7 @@
 import 'package:lichess_mobile/src/constants.dart';
 import 'package:lichess_mobile/src/model/common/perf.dart';
 import 'package:lichess_mobile/src/model/user/user.dart';
+import 'package:lichess_mobile/src/styles/icon_extensions.dart';
 import 'package:lichess_mobile/src/styles/lichess_icons.dart';
 import 'package:lichess_mobile/src/styles/styles.dart';
 import 'package:lichess_mobile/src/utils/l10n_context.dart';
@@ -78,7 +79,9 @@ class const PerfCards({
               ),
               scrollDirection: Axis.horizontal,
               itemCount: userPerfs.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (_, index) {
+                // Uses the build context: theme reads on the item builder context are not updated
+                // when the theme changes.
                 final perf = userPerfs[index];
                 final userPerf = user.perfs[perf]!;
                 final bool isPerfWithoutStats = Perf.streak == perf;
@@ -99,9 +102,8 @@ class const PerfCards({
                               perf.shortLabel(context.l10n),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: textShade(context, 0.7)),
                             ),
-                            Icon(perf.icon, color: textShade(context, 0.6)),
+                            Icon(perf.icon, color: perfIconColor(context)),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -120,8 +122,8 @@ class const PerfCards({
                                         ? LichessIcons.arrow_full_upperright
                                         : LichessIcons.arrow_full_lowerright,
                                     color: userPerf.progression > 0
-                                        ? context.lichessColors.good
-                                        : context.lichessColors.error,
+                                        ? context.lichessColors.green
+                                        : context.lichessColors.red,
                                     size: 12,
                                   ),
                                   Flexible(
@@ -131,8 +133,8 @@ class const PerfCards({
                                       maxLines: 1,
                                       style: TextStyle(
                                         color: userPerf.progression > 0
-                                            ? context.lichessColors.good
-                                            : context.lichessColors.error,
+                                            ? context.lichessColors.green
+                                            : context.lichessColors.red,
                                         fontSize: 11,
                                       ),
                                     ),
