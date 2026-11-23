@@ -30,7 +30,10 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileAllowTakebacksAndHints => 'Luba tagasivõtmised ja vihjed';
 
   @override
-  String get mobileAmoledBlack => 'Amoled black';
+  String get mobileAppLogs => 'App logs';
+
+  @override
+  String get mobileAmoledBlack => 'Amoled-must';
 
   @override
   String get mobileAreYouSure => 'Kas oled kindel?';
@@ -71,6 +74,9 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileClearButton => 'Tühjenda';
 
   @override
+  String get mobileClearMoves => 'Clear moves';
+
+  @override
   String get mobileCodeExpiresMessage => 'Kood aegub 5 minuti pärast ja seda saab kasutada vaid ühe korra.';
 
   @override
@@ -95,6 +101,9 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get mobileCustomizeHomeTipDismiss => 'Taganda';
+
+  @override
+  String get mobileDeleteAllLogsConfirmation => 'Do you want to delete all logs?';
 
   @override
   String get mobileDangerZone => 'Ohutsoon';
@@ -155,6 +164,9 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileHomeTab => 'Kodu';
 
   @override
+  String get mobileHttpLogs => 'Network logs';
+
+  @override
   String mobileIfAccountMatchesCodeSent(String param1, String param2) {
     return 'Kui konto vastab aadressile $param1, saadeti sellele $param2 märgikood. Vaata oma postkasti ja sisesta kood.';
   }
@@ -166,22 +178,22 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileLocalDatabaseSize => 'Kohaliku andmebaasi suurus';
 
   @override
-  String get mobileMoveOnRelease => 'Move on release';
+  String get mobileMoveOnRelease => 'Käik vabastamisel';
 
   @override
-  String get mobileMoveOnReleaseSubtitle => 'When moving a piece by tapping, the move is made when you lift your finger, letting you slide to change the destination square.';
+  String get mobileMoveOnReleaseSubtitle => 'Nuppu puudutusega liigutades, tehakse käik sõrme tõstmisel, võimaldades sihtruutu libistades muuta.';
 
   @override
   String get mobileMustBeLoggedIn => 'Selle lehe vaatamiseks peab olema sisse logitud.';
 
   @override
-  String get mobileNbOfflinePuzzles => 'Offline puzzles';
+  String get mobileNbOfflinePuzzles => 'Võrguühenduseta pusled';
 
   @override
   String get mobileNewGame => 'Uus mäng';
 
   @override
-  String get mobileNextMistake => 'Next mistake';
+  String get mobileNextMistake => 'Järgmine viga';
 
   @override
   String get mobileNoSearchResults => 'Tulemused puuduvad';
@@ -202,58 +214,58 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileOverTheBoard => 'Üle laua';
 
   @override
-  String get mobilePasteFromClipboard => 'Paste from clipboard';
+  String get mobilePasteFromClipboard => 'Kopeeri lõikelaualt';
 
   @override
-  String get mobilePerfShortAntichess => 'Antichess';
+  String get mobilePerfShortAntichess => 'Antimale';
 
   @override
-  String get mobilePerfShortAtomic => 'Atomic';
+  String get mobilePerfShortAtomic => 'Aatom';
 
   @override
-  String get mobilePerfShortBlitz => 'Blitz';
+  String get mobilePerfShortBlitz => 'Kiir';
 
   @override
-  String get mobilePerfShortBullet => 'Bullet';
+  String get mobilePerfShortBullet => 'Välk';
 
   @override
   String get mobilePerfShortChess960 => '960';
 
   @override
-  String get mobilePerfShortClassical => 'Classical';
+  String get mobilePerfShortClassical => 'Klassika';
 
   @override
-  String get mobilePerfShortCorrespondence => 'Corresp.';
+  String get mobilePerfShortCorrespondence => 'Kirim.';
 
   @override
-  String get mobilePerfShortCrazyhouse => 'Crazy';
+  String get mobilePerfShortCrazyhouse => 'Pöörane';
 
   @override
-  String get mobilePerfShortFromPosition => 'From Pos.';
+  String get mobilePerfShortFromPosition => 'Seisult.';
 
   @override
-  String get mobilePerfShortHorde => 'Horde';
+  String get mobilePerfShortHorde => 'Hord';
 
   @override
   String get mobilePerfShortKingOfTheHill => 'KotH';
 
   @override
-  String get mobilePerfShortPuzzle => 'Puzzle';
+  String get mobilePerfShortPuzzle => 'Pusle';
 
   @override
-  String get mobilePerfShortRacingKings => 'Racing';
+  String get mobilePerfShortRacingKings => 'Kihutus';
 
   @override
-  String get mobilePerfShortRapid => 'Rapid';
+  String get mobilePerfShortRapid => 'Tormakas';
 
   @override
-  String get mobilePerfShortThreeCheck => '3check';
+  String get mobilePerfShortThreeCheck => '3tuli';
 
   @override
   String get mobilePerfShortUltraBullet => 'Ultra';
 
   @override
-  String get mobilePgnCopied => 'PGN copied.';
+  String get mobilePgnCopied => 'PGN kopeeritud.';
 
   @override
   String mobilePlayersMatchingSearchTerm(String param) {
@@ -267,13 +279,16 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobilePositionRight => 'Paremal';
 
   @override
-  String get mobilePracticeMode => 'Practice mode';
+  String get mobilePracticeMode => 'Harjutuslaad';
 
   @override
   String get mobilePrefMagnifyDraggedPiece => 'Suurenda tiritud malendit';
 
   @override
   String get mobilePreviousPage => 'Eelmine';
+
+  @override
+  String get mobilePuzzleHistoryDescription => 'Review your past puzzle attempts.';
 
   @override
   String get mobilePuzzleStormConfirmEndRun => 'Kas soovid partii lõpetada?';
@@ -294,7 +309,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobilePuzzlesTab => 'Pusled';
 
   @override
-  String get mobileRateThisApp => 'Rate this app';
+  String get mobileRateThisApp => 'Hinda seda rakendust';
 
   @override
   String get mobileRecentSearches => 'Hiljutised otsingud';
@@ -303,10 +318,10 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileRemoveBookmark => 'Eemalda järjehoidja';
 
   @override
-  String get mobileSelectAStudy => 'Select a study';
+  String get mobileSelectAStudy => 'Vali uuring';
 
   @override
-  String get mobileSendMeACode => 'Send me a code';
+  String get mobileSendMeACode => 'Saada mulle kood';
 
   @override
   String get mobileServerAnalysis => 'Serveri analüüs';
@@ -327,10 +342,10 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileSettingsDraggedTargetSquare => 'Ruut';
 
   @override
-  String get mobileSettingsDrawnShapeColor => 'Drawn shape color';
+  String get mobileSettingsDrawnShapeColor => 'Joonistatud kuju värv';
 
   @override
-  String get mobileSettingsDrawnShapeColorHelp => 'This color is used for shapes drawn by hand using two fingers.';
+  String get mobileSettingsDrawnShapeColorHelp => 'Seda värvi kasutatakse kahe sõrmega käsitsi joonistatud kujundite puhul.';
 
   @override
   String get mobileSettingsHomeWidgets => 'Kodu vidinad';
@@ -369,7 +384,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileSettingsPieceShiftMethodTapTwoSquares => 'Puuduta kahte ruutu';
 
   @override
-  String get mobileSettingsPreferencesSaved => 'Your preferences have been saved in your Lichess account. They will be synchronized across all your devices.';
+  String get mobileSettingsPreferencesSaved => 'Sinu eelistused on salvestatud sinu Lichessi kontole. Need sünkroniseeritakse kõigis sinu seadmetes.';
 
   @override
   String get mobileSettingsShapeDrawing => 'Kuju joonistamine';
@@ -387,7 +402,10 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileSettingsTouchFeedbackSubtitle => 'Kui lubatud, vibreerib seade lühidalt, kui liigutad või võtad lööd malendit.';
 
   @override
-  String get mobileShareChallengeUrl => 'Share challenge URL';
+  String get mobileShare => 'Share';
+
+  @override
+  String get mobileShareChallengeUrl => 'Jaga väljakutse URL-i';
 
   @override
   String get mobileShareGamePGN => 'Jaga PGN';
@@ -396,7 +414,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileShareGameURL => 'Jaga mängu URL';
 
   @override
-  String get mobileShareLocalAnalysisPgn => 'Share local analysis PGN';
+  String get mobileShareLocalAnalysisPgn => 'Jaga kohalikku analüüsi PGN-failina';
 
   @override
   String get mobileSharePositionAsFEN => 'Jaga positsiooni FEN-ina';
@@ -408,31 +426,31 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileShowComments => 'Näita kommentaare';
 
   @override
-  String get mobileShowEngineLines => 'Show engine lines';
+  String get mobileShowEngineLines => 'Kuva mootorijooned';
 
   @override
-  String get mobileShowEvaluationGauge => 'Show evaluation gauge';
+  String get mobileShowEvaluationGauge => 'Kuva hinnangumõõdik';
 
   @override
   String get mobileShowResult => 'Näita tulemust';
 
   @override
-  String get mobileSignInWithBrowser => 'Sign in with the browser';
+  String get mobileSignInWithBrowser => 'Logi sisse brauseri kaudu';
 
   @override
-  String get mobileSignInWithEmail => 'Sign in with an email';
+  String get mobileSignInWithEmail => 'Logi sisse e-posti kaudu';
 
   @override
-  String get mobileSimpleDelay => 'Simple delay';
+  String get mobileSimpleDelay => 'Lihtne viivitus';
 
   @override
-  String get mobileSmallBoard => 'Small board';
+  String get mobileSmallBoard => 'Väike laud';
 
   @override
   String get mobileSomethingWentWrong => 'Midagi läks valesti.';
 
   @override
-  String get mobileSortFriends => 'Sort friends';
+  String get mobileSortFriends => 'Sorteeri sõpru';
 
   @override
   String get mobileStopShowingThreat => 'Lõpeta ohu näitamine';
@@ -441,13 +459,16 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileSystemColors => 'Süsteemi värvid';
 
   @override
-  String get mobileTablebaseOffline => 'Tablebase is not available offline.';
+  String get mobileTablebaseOffline => 'Lõppmängude andmebaas ei ole võrguühenduseta saadaval.';
 
   @override
   String get mobileTheme => 'Teema';
 
   @override
-  String get mobileTooManyLoginAttempts => 'Too many attempts. Please try again later.';
+  String get mobileToBeAnnounced => 'To be announced';
+
+  @override
+  String get mobileTooManyLoginAttempts => 'Liiga palju katseid. Palun proovi hiljem uuesti.';
 
   @override
   String get mobileTournamentCompleted => 'Lõpetatud';
@@ -461,13 +482,13 @@ class AppLocalizationsEt extends AppLocalizations {
   }
 
   @override
-  String get mobileUseSymmetricPieces => 'Use symmetric pieces';
+  String get mobileUseSymmetricPieces => 'Kasuta sümmeetrilisi nuppe';
 
   @override
   String get mobileViewGame => 'Vaata mängu';
 
   @override
-  String get mobileViewLicenses => 'View licences';
+  String get mobileViewLicenses => 'Vaata litsentse';
 
   @override
   String get mobileWaitingForOpponentToJoin => 'Vastase ühinemise ootamine...';
@@ -476,10 +497,10 @@ class AppLocalizationsEt extends AppLocalizations {
   String get mobileWatchTab => 'Vaata';
 
   @override
-  String get mobileWeWillEmailYouCode => 'We will email you a code to sign in with.';
+  String get mobileWeWillEmailYouCode => 'Saadame sulle e-postiga sisselogimiskoodi.';
 
   @override
-  String get mobileYouCannotChallengeYourself => 'You cannot challenge yourself';
+  String get mobileYouCannotChallengeYourself => 'Sa ei saa endale väljakutset esitada';
 
   @override
   String get activityActivity => 'Aktiivsus';
@@ -779,6 +800,12 @@ class AppLocalizationsEt extends AppLocalizations {
   String get arenaNewTeamBattle => 'Uus võistkonnalahing';
 
   @override
+  String get arenaStartDate => 'Start date';
+
+  @override
+  String get arenaEntryConditions => 'Entry conditions';
+
+  @override
   String get arenaCustomStartDate => 'Kohandatud algusaeg';
 
   @override
@@ -806,7 +833,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get arenaNoArenaStreaks => 'No Arena streaks';
 
   @override
-  String get arenaAveragePerformance => 'Average performance';
+  String get arenaAveragePerformance => 'Keskmine sooritus';
 
   @override
   String get arenaAverageScore => 'Keskmine skoor';
@@ -862,10 +889,10 @@ class AppLocalizationsEt extends AppLocalizations {
   String get arenaPointsAvg => 'Points average';
 
   @override
-  String get arenaPointsSum => 'Points sum';
+  String get arenaPointsSum => 'Punktide summa';
 
   @override
-  String get arenaRankAvg => 'Rank average';
+  String get arenaRankAvg => 'Keskmine sooritus';
 
   @override
   String get arenaTournamentWinners => 'Tournament winners';
@@ -887,6 +914,14 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get arenaLeaguesAndStreamerBattles => 'Leagues & Streamer Battles';
+
+  @override
+  String get arenaAllowBotAccounts => 'Allow bot accounts';
+
+  @override
+  String arenaAllowBotAccountsDescription(String param) {
+    return 'Let <a href=\'$param\' target=\'_blank\'>bots</a> join the tournament and play with their engines. This often repels human players.';
+  }
 
   @override
   String arenaDrawingWithinNbMoves(int count) {
@@ -1416,6 +1451,14 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get coordinatesPracticeOnlySomeFilesAndRanks => 'Practice only some files & ranks';
+
+  @override
+  String get coordinatesEnterTheCoordinate => 'Enter the coordinate';
+
+  @override
+  String coordinatesPressEnterToStart(String param) {
+    return 'Press $param to start';
+  }
 
   @override
   String get learnLearnChess => 'Õpi malet';
@@ -2365,7 +2408,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get preferencesPromoteToQueenAutomatically => 'Automaatselt edenda lipuks';
 
   @override
-  String get preferencesExplainPromoteToQueenAutomatically => 'Hoia edendamise ajal <ctrl> klahvi all, et ajutiselt keelata automaatne edendamine';
+  String get preferencesExplainPromoteToQueenAutomatically => 'Hold the ctrl key while promoting to temporarily disable auto-promotion';
 
   @override
   String get preferencesWhenPremoving => 'Eelkäiguga';
@@ -2380,7 +2423,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get preferencesMoveConfirmation => 'Käigu kinnitus';
 
   @override
-  String get preferencesMultipleChoices => 'Multiple choices. ';
+  String get preferencesMultipleChoices => 'Multiple choices.';
 
   @override
   String get preferencesExplainCanThenBeTemporarilyDisabled => 'Can be disabled during a game with the board menu';
@@ -2476,7 +2519,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get preferencesInlineNotation => 'Inline notation';
 
   @override
-  String get preferencesShowServerAnalysis => 'Show server analysis';
+  String get preferencesShowMainlineAnalysis => 'Show mainline analysis';
 
   @override
   String get preferencesShowBestMoveArrows => 'Show best move arrows';
@@ -2504,6 +2547,9 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get preferencesShowCheckableKing => 'Show checkable king';
+
+  @override
+  String get preferencesShowTrappedPieces => 'Show trapped pieces';
 
   @override
   String get preferencesDisclosureMode => 'Enable variation hiding';
@@ -2821,7 +2867,7 @@ class AppLocalizationsEt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count kodamiseks',
+      other: '$count kordamiseks',
       one: '$count kodamiseks',
     );
     return '$_temp0';
@@ -2895,9 +2941,6 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get puzzleThemeCastling => 'Vangerdus';
-
-  @override
-  String get puzzleThemeEnPassant => 'En passant';
 
   @override
   String get puzzleThemeCastlingDescription => 'Too kuningas ohust eemale ja valmista vanker rünnakuks ette.';
@@ -2991,6 +3034,9 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get puzzleThemeEndgameDescription => 'Taktika mängu viimases faasis.';
+
+  @override
+  String get puzzleThemeEnPassant => 'En passant';
 
   @override
   String get puzzleThemeEnPassantAdjacentCaptureDescription => 'A tactic involving the en passant rule, where a pawn can capture an opposing pawn that has just moved next to it with its initial two-square move.';
@@ -3339,9 +3385,6 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get settingsDeleteAccountConfirmText => 'I understand that deleted accounts aren\'t recoverable';
-
-  @override
-  String get gameSetup => 'Mängu seadistamine';
 
   @override
   String get challengeAFriend => 'Kutse mängule';
@@ -3790,6 +3833,9 @@ class AppLocalizationsEt extends AppLocalizations {
   String get engineSettings => 'Mootori seaded';
 
   @override
+  String get engine => 'Mootor';
+
+  @override
   String get enginesFromStrongestToWeakest => 'Mootorid tugevaimast nõrgimani';
 
   @override
@@ -3802,7 +3848,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get claimADraw => 'Võta viik';
 
   @override
-  String get drawClaimed => 'Nõutav viik';
+  String get drawClaimed => 'Viiginõue';
 
   @override
   String get offerDraw => 'Paku viiki';
@@ -4416,6 +4462,11 @@ class AppLocalizationsEt extends AppLocalizations {
   String get noNetwork => 'Ühenduseta';
 
   @override
+  String friendsOnlineAndPlaying(String param1, String param2) {
+    return 'Sõbrad võrgus: $param1\nSõbrad mängimas: $param2';
+  }
+
+  @override
   String get favoriteOpponents => 'Lemmikvastased';
 
   @override
@@ -4541,6 +4592,9 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get resume => 'Jätka';
+
+  @override
+  String get stop => 'Stop';
 
   @override
   String get youArePlaying => 'Te mängite!';
@@ -4782,9 +4836,6 @@ class AppLocalizationsEt extends AppLocalizations {
   String get reason => 'Põhjus';
 
   @override
-  String get whatIsIheMatter => 'What\'s the matter?';
-
-  @override
   String get cheat => 'Sohk';
 
   @override
@@ -4801,9 +4852,6 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get processReportFasterInEnglish => 'Vaatame sinu teate kiiremini läbi, kui kirjutad inglise keeles.';
-
-  @override
-  String get error_provideOneCheatedGameLink => 'Please provide at least one link to a game for review.';
 
   @override
   String by(String param) {
@@ -5383,7 +5431,13 @@ class AppLocalizationsEt extends AppLocalizations {
   String get downloadImported => 'Lae imporditud PNG';
 
   @override
+  String get downloadMyGames => 'Lae alla minu mängud';
+
+  @override
   String get downloadAllGames => 'Lae alla kõik mängud';
+
+  @override
+  String get downloadResults => 'Lae alla tulemused';
 
   @override
   String get crosstable => 'Skoor';
@@ -6011,6 +6065,12 @@ class AppLocalizationsEt extends AppLocalizations {
   String get minimumRatedGames => 'Minimaalne reitinguga mängude arv';
 
   @override
+  String get minimumAccountAge => 'Minimum account age';
+
+  @override
+  String get titledPlayersBypassRestriction => 'Titled players bypass this restriction.';
+
+  @override
   String get minimumRating => 'Minimaalne reiting';
 
   @override
@@ -6150,7 +6210,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get showMeEverything => 'Näita mulle kõike';
 
   @override
-  String get lichessPatronInfo => 'Lichess on heategevuslik ja täiesti tasuta avatud lähtekoodiga tarkvara.\nKõik tegevuskulud, arendus ja sisu rahastatakse ainult kasutajate annetustest.';
+  String get lichessPatronInfo => 'Lichess is a charity and entirely free/libre open source software. We depend on user donations to support our operating costs, development, and content. Without our generous community, we would not be able to keep the site running. Thank you for joining us!';
 
   @override
   String get nothingToSeeHere => 'Siin pole hetkel midagi näha.';
@@ -6181,6 +6241,11 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get clearSearch => 'Tühjenda otsing';
+
+  @override
+  String searchInX(String param) {
+    return 'Search in \"$param\"';
+  }
 
   @override
   String thereAreNoResultsForX(String param) {
@@ -6927,6 +6992,9 @@ class AppLocalizationsEt extends AppLocalizations {
   String get studyKick => 'Viska välja';
 
   @override
+  String get studyRemove => 'Remove';
+
+  @override
   String get studyLeaveTheStudy => 'Lahku uuringust';
 
   @override
@@ -6958,9 +7026,6 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get studyOnlyContributorsCanRequestAnalysis => 'Ainult selle uuringu panustajad saavad taotleda arvuti analüüsi.';
-
-  @override
-  String get studyGetAFullComputerAnalysis => 'Taotle täielikku serveripoolset arvuti analüüsi põhiliinist.';
 
   @override
   String get studyMakeSureTheChapterIsComplete => 'Make sure the chapter is complete. You can only request analysis once.';
@@ -7181,9 +7246,6 @@ class AppLocalizationsEt extends AppLocalizations {
   String get studyStart => 'Alusta';
 
   @override
-  String get studySave => 'Salvesta';
-
-  @override
   String get studyClearChat => 'Clear chat';
 
   @override
@@ -7204,13 +7266,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get studyGoodMove => 'Hea käik';
 
   @override
-  String get studyMistake => 'Viga';
-
-  @override
   String get studyBrilliantMove => 'Suurepärane käik';
-
-  @override
-  String get studyBlunder => 'Tõsine viga';
 
   @override
   String get studyInterestingMove => 'Huvitav käik';
@@ -7314,7 +7370,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get studyGetTheTour => 'Need help? Get the tour!';
 
   @override
-  String get studyWelcomeToLichessStudyTitle => 'Welcome to Lichess Study!';
+  String get studyWelcomeToLichessStudyTitle => 'Tere tulemast Lichessi õppekeskkonda!';
 
   @override
   String get studyWelcomeToLichessStudyText => 'This is a shared analysis board.<br><br>Use it to analyse and annotate games,<br>to discuss positions with friends,<br>and of course for chess lessons!<br><br>It\'s a powerful tool. Let\'s take some time to see how it works.';
@@ -7386,7 +7442,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get studyLoadGameFromTheWebTitle => 'Load a game from the web';
 
   @override
-  String get studyLoadGameFromTheWebText => 'Paste a game URL<br>(like lichess.org/7fHIU0XI)<br>to load game moves in the chapter.';
+  String get studyLoadGameFromTheWebText => 'Paste a game URL<br>(like lichess.org/game/7fHIU0XI)<br>to load game moves in the chapter.';
 
   @override
   String get studyFromFenStringTitle => 'From a FEN string';
@@ -7417,6 +7473,27 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get studyWhiteDefeatBlackCanNotWin => 'White defeat, but Black can\'t win';
+
+  @override
+  String get studyAnalysisEditor => 'Analysis editor';
+
+  @override
+  String get studyClearLocal => 'Clear local analysis?';
+
+  @override
+  String get studyClearPublished => 'Clear published analysis?';
+
+  @override
+  String get studyRequestAServerAnalysis => 'Request a server analysis';
+
+  @override
+  String get studyAnalyzeOnYourDevice => 'Analyse on your device';
+
+  @override
+  String get studySearchChapters => 'Search chapters';
+
+  @override
+  String get studySearchGames => 'Search games';
 
   @override
   String studyNbChapters(int count) {
@@ -7456,8 +7533,8 @@ class AppLocalizationsEt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Aseta oma PGN tekst siia, kuni $count mängu',
-      one: 'Aseta oma PGN tekst siia, kuni $count mäng',
+      other: 'Paste games as PGN text here. For each game, a new chapter is created. The study can have up to $count chapters.',
+      one: 'Paste your PGN text here, up to $count game.',
     );
     return '$_temp0';
   }
@@ -7495,6 +7572,12 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get tfaTwoFactorAuth => 'Kaheastmeline autentimine';
+
+  @override
+  String get tfaAuthenticationCode => 'Autentimise kood';
+
+  @override
+  String get tfaOpenTwoFactorApp => 'Ava kaheastmelise autentimise äpp oma seadmes, et näha autentimiskoodi ja kinnitada oma isikut.';
 
   @override
   String get timeagoJustNow => 'äsja';

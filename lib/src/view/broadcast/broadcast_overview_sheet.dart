@@ -5,13 +5,16 @@ import 'package:intl/intl.dart';
 import 'package:lichess_mobile/src/model/broadcast/broadcast.dart';
 import 'package:lichess_mobile/src/model/broadcast/broadcast_providers.dart';
 import 'package:lichess_mobile/src/model/common/id.dart';
+import 'package:lichess_mobile/src/service/app_links_service.dart';
 import 'package:lichess_mobile/src/styles/styles.dart';
 import 'package:lichess_mobile/src/utils/l10n_context.dart';
 import 'package:lichess_mobile/src/widgets/adaptive_bottom_sheet.dart';
+import 'package:lichess_mobile/src/widgets/misc.dart';
+import 'package:lichess_mobile/src/widgets/platform.dart';
+import 'package:lichess_mobile/src/widgets/rich_link_text.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-final _dateFormatter = DateFormat.MMMd();
+DateFormat get _dateFormatter => DateFormat.MMMd();
 
 String _formatDates(BroadcastTournamentDates dates) => dates.endsAt == null
     ? _dateFormatter.format(dates.startsAt)
@@ -29,11 +32,12 @@ Iterable<String> broadcastInformationTexts(BroadcastTournamentInformation inform
 
 /// Shows the overview of a broadcast tournament in a full height bottom sheet.
 Future<void> showBroadcastOverviewSheet(BuildContext context, BroadcastTournamentId tournamentId) {
-  return showAdaptiveFullHeightBottomSheet<void>(
+  return showAdaptiveNavigationSheet<void>(
     context: context,
-    title: _BroadcastOverviewTitle(tournamentId: tournamentId),
-    builder: (context, scrollController) =>
-        _BroadcastOverview(tournamentId: tournamentId, scrollController: scrollController),
+    builder: (context) => PlatformScaffold(
+      appBar: PlatformAppBar(title: _BroadcastOverviewTitle(tournamentId: tournamentId)),
+      body: _BroadcastOverview(tournamentId: tournamentId),
+    ),
   );
 }
 
@@ -47,15 +51,13 @@ class const _BroadcastOverviewTitle({required final BroadcastTournamentId tourna
     return WhenRouteSettled(
       ready: name != null,
       placeholder: const SizedBox.shrink(),
-      builder: (context) => Text(name!),
+      builder: (context) => AppBarTitleText(name!, maxLines: 2),
     );
   }
 }
 
-class const _BroadcastOverview({
-  required final BroadcastTournamentId tournamentId,
-  required final ScrollController scrollController,
-}) extends ConsumerWidget {
+class const _BroadcastOverview({required final BroadcastTournamentId tournamentId})
+    extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tournament = ref.watch(broadcastTournamentProvider(tournamentId));
@@ -69,10 +71,7 @@ class const _BroadcastOverview({
             final information = tournament.data.information;
             final description = tournament.data.description;
             return ListView(
-              controller: scrollController,
-              padding: Styles.bodyPadding.add(
-                EdgeInsets.only(bottom: MediaQuery.paddingOf(context).bottom),
-              ),
+              padding: Styles.bodyPadding.add(MediaQuery.paddingOf(context)),
               children: [
                 Wrap(
                   alignment: WrapAlignment.center,
@@ -105,6 +104,12 @@ class const _BroadcastOverview({
                         context.l10n.broadcastOfficialStandings,
                         information.standings,
                       ),
+                    if (information.regulations != null)
+                      _BroadcastOverviewCard(
+                        Icons.link,
+                        context.l10n.broadcastRegulations,
+                        information.regulations,
+                      ),
                   ],
                 ),
                 if (description != null) ...[
@@ -113,7 +118,7 @@ class const _BroadcastOverview({
                     data: description,
                     onTapLink: (text, url, title) {
                       if (url == null) return;
-                      launchUrl(Uri.https('lichess.org').resolve(url));
+                      ref.read(appLinksServiceProvider).onLinkifyOpen(context, UrlElement(url));
                     },
                     softLineBreak: true,
                   ),
@@ -131,15 +136,19 @@ class const _BroadcastOverview({
 }
 
 class const _BroadcastOverviewCard(final IconData iconData, final String text, [final Uri? website])
-    extends StatelessWidget {
+    extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
       margin: const EdgeInsets.all(4.0),
       child: InkWell(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
-        onTap: website != null ? () => launchUrl(website!) : null,
+        onTap: website != null
+            ? () => ref
+                  .read(appLinksServiceProvider)
+                  .onLinkifyOpen(context, UrlElement(website.toString()))
+            : null,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
